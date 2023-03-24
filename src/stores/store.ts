@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 import { Constants } from "../domain/Constants";
-import { BoardUpdateMessage, HandshakeMessage, SendableMessage } from "../domain/Message";
+import {
+  BoardUpdateMessage,
+  HandshakeMessage,
+  SendableMessage,
+} from "../domain/Message";
 import { WebSocketMessenger } from "../domain/Messenger";
 import { Player } from "../domain/Player";
 import { RevealedBoardSlot } from "../domain/RevealedBoardSlot";
@@ -23,9 +27,13 @@ export const useGlobalStore = defineStore("global", () => {
   messenger.addOnMessageReceivedListener({
     messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
     onMessageReceived: (message: RevealedBoardSlot[]) => {
-      console.log("received board update: ")
-      console.log(message)
+      console.log("received board update: ");
+      console.log(message);
+      console.log("before");
+      console.log(revealedSlots.value.length);
       revealedSlots.value = message;
+      console.log("after");
+      console.log(revealedSlots.value.length);
     },
   });
 
@@ -42,9 +50,9 @@ export const useGlobalStore = defineStore("global", () => {
     const message = new HandshakeMessage()
       .setContent({ playerId: player.value.id });
 
-    console.log("send message")
+    console.log("send message");
     player.value.messenger.sendMessage(message);
   }
 
-  return { revealedSlots, connect };
+  return { revealedSlots };
 });

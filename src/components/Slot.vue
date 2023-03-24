@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { RevealedBoardSlot } from '../domain/RevealedBoardSlot';
+import { useGlobalStore } from '../stores/store';
 
-const { slot, colored } = defineProps<{
-  slot: RevealedBoardSlot | null,
-  colored: boolean,
-}>()
+const store = useGlobalStore()
+const { revealedSlots } = storeToRefs(store)
 
-const highlighted = computed(() => slot !== null)
-const selectable = computed(() => highlighted && slot?.piece === null)
+const { colored, x, y } = defineProps<{ colored: boolean, x: number, y: number }>()
+
+const slot = computed(() => revealedSlots.value.find(slot => slot.x === x && slot.y === y) || null)
+const highlighted = computed(() => slot.value !== null)
+const selectable = computed(() => highlighted && slot.value?.piece === null)
 
 </script>
 
@@ -30,11 +33,12 @@ const selectable = computed(() => highlighted && slot?.piece === null)
   background-color: var(--slot-color);
   border-radius: var(--small-radius);
   z-index: 1;
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .slot--selectable:hover {
-  transform: rotate(-15deg) scale(1.2) skew(1deg, 2deg);
+  transform: rotate(-12deg) scale(1.2) skew(1deg, 2deg);
+  box-shadow: 0px 0px 20px 2px var(--primary-color);
   z-index: 10;
 }
 

@@ -63,6 +63,10 @@ export class WebSocketMessenger extends Messenger {
       console.log("socket open")
       this.onMessengerReady?.call(this, this);
     });
+
+    this.websocket.addEventListener("error", () => {
+      console.log("socker error")
+    });
   }
 
   sendMessage(message: SendableMessage<any>): void {
