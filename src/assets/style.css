@@ -3,7 +3,7 @@
   --slot-color: #242424;
   --colored-slot-color: #7A7A7A;
   --primary-color: #42B883AA;
-  --overlay-color: #80000000;
+  --overlay-color: black; /*#80000000*/
   --small-radius: 6px;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

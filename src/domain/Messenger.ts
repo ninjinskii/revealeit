@@ -1,13 +1,24 @@
 import { Constants } from "./Constants";
 import {
   BoardUpdateMessage,
-  Message,
+  NewTurnMessage,
   ReceiveableMessage,
   SendableMessage,
 } from "./Message";
 
+interface ReceiveableMessageListener<T> {
+  messageKey: string;
+  onMessageReceived(message: T): void;
+}
+
+interface WebSocketMessengerOptions {
+  serverWebSocketUrl: string;
+  onWebSocketReady: () => void;
+}
+
 export abstract class Messenger {
-  protected onMessageReceivedListener?: (message: ReceiveableMessage<any>) => void
+  protected onMessageReceivedListeners: ReceiveableMessageListener<any>[] = [];
+  public onMessengerReady?: (messenger: Messenger) => void;
 
   abstract sendMessage(message: SendableMessage<any>): void;
 
@@ -17,44 +28,41 @@ export abstract class Messenger {
     switch (key) {
       case Constants.MESSAGE_BOARD_UPDATE_KEY:
         return new BoardUpdateMessage(key, content);
+      case Constants.MESSAGE_TURN_KEY:
+        return new NewTurnMessage(key, content);
       default:
         throw new Error(`Cannot parse message: key was ${key}`);
     }
   }
 
-  setOnMessageReceivedListener(listener: (message: ReceiveableMessage<any>) => void) {
-    this.onMessageReceivedListener = listener
+  addOnMessageReceivedListener(listener: ReceiveableMessageListener<any>) {
+    this.onMessageReceivedListeners.push(listener);
   }
 }
-
-// export interface Messenger {
-//   sendMessage(message: string): void;
-//   onMessageReceived(message: string): void;
-//   setMessageReceivedListener(listener: (message: string) => void): void;
-// }
 
 export class WebSocketMessenger extends Messenger {
   websocket: WebSocket;
 
-  constructor(serverWebSocketAdress: string) {
+  constructor(options: WebSocketMessengerOptions) {
     super();
-    this.websocket = new WebSocket(serverWebSocketAdress);
+    this.websocket = new WebSocket(options.serverWebSocketUrl);
+    super.onMessengerReady = options.onWebSocketReady
 
     this.websocket.addEventListener(
       "message",
       (event: MessageEvent<string>) => {
-        const message = this.receiveMessage(event.data).getContent();
-        super.onMessageReceivedListener?.call(this, message)
+        const message = this.receiveMessage(event.data);
+
+        this.onMessageReceivedListeners
+          .find((listener) => listener.messageKey === message.key)
+          ?.onMessageReceived(message.getContent());
       },
     );
-  }
 
-  setMessageReceivedListener(listener: (message: Message) => void) {
-    super.onMessageReceivedListener = listener;
-  }
-
-  onMessageReceived(message: ReceiveableMessage<any>): void {
-    this.onMessageReceivedListener?.call(this, message);
+    this.websocket.addEventListener("open", () => {
+      console.log("socket open")
+      this.onMessengerReady?.call(this, this);
+    });
   }
 
   sendMessage(message: SendableMessage<any>): void {

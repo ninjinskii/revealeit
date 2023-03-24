@@ -11,7 +11,6 @@ const { boardSize } = defineProps<{ boardSize: number }>()
 function getRevealedSlotAt(x: number, y: number): RevealedBoardSlot | null {
   return revealedSlots.value.find(slot => slot.x === x && slot.y === y) || null
 }
-
 </script>
 
 <template>

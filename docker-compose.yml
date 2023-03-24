@@ -1,12 +1,13 @@
-version: "3.4"
+version: "3.7"
+
 services:
   web:
     build: .
     container_name: revealeit.njk.localhost
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.cavity.rule=Host(`revealeit.njk.localhost`)"
-      - "traefik.http.routers.cavity.tls=true"
+      - "traefik.http.routers.revealeit.rule=Host(`revealeit.njk.localhost`)"
+      - "traefik.http.routers.revealeit.tls=true"
       - "traefik.docker.network=proxy"
     networks:
       - default

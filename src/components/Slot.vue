@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { RevealedBoardSlot } from '../domain/RevealedBoardSlot';
 
 const { slot, colored } = defineProps<{
@@ -6,18 +7,18 @@ const { slot, colored } = defineProps<{
   colored: boolean,
 }>()
 
-const highlighted = slot !== null
-const selectable = highlighted && slot.piece === null
+const highlighted = computed(() => slot !== null)
+const selectable = computed(() => highlighted && slot?.piece === null)
 
 </script>
 
 <template>
   <div 
     class="slot"
-    :class="{ 'slot--colored': colored, 'slot--selectable': selectable }"
+    :class="{ 'slot--colored': colored, 'slot--selectable': selectable, 'slot--highlighted': highlighted }"
   >
-    <div v-if="!highlighted" class="slot__overlay">
-    </div>
+    <!-- <div v-if="!highlighted" class="slot__overlay">
+    </div> -->
   </div>
 </template>
 
@@ -25,6 +26,7 @@ const selectable = highlighted && slot.piece === null
 .slot {
   width: 100px;
   height: 100px;
+  margin: 20px;
   background-color: var(--slot-color);
   border-radius: var(--small-radius);
   z-index: 1;
@@ -33,8 +35,12 @@ const selectable = highlighted && slot.piece === null
 
 .slot--selectable:hover {
   transform: rotate(-15deg) scale(1.2) skew(1deg, 2deg);
-  filter: drop-shadow(0 0 2em var(--primary-color));
   z-index: 10;
+}
+
+.slot--highlighted {
+  /* filter: drop-shadow(0 0 1em var(--primary-color)); */
+  box-shadow: 0px 0px 20px 0.5px var(--primary-color);
 }
 
 .slot--colored {
