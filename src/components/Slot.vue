@@ -5,18 +5,19 @@ import { useGlobalStore } from '../stores/store';
 import BoardPiece from './BoardPiece.vue';
 
 const store = useGlobalStore()
-const { revealedSlots, player, selectedPiece } = storeToRefs(store)
+const { revealedSlots, killableSlots, player, selectedPiece } = storeToRefs(store)
 
 const { colored, x, y } = defineProps<{ colored: boolean, x: number, y: number }>()
 
 const slot = computed(() => revealedSlots.value.find(slot => slot.x === x && slot.y === y) || null)
 const highlighted = computed(() => slot.value !== null)
 const selectable = computed(() => highlighted && slot.value?.piece === null && selectedPiece.value)
-const toggleable = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
+const isOwnPiece = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
 const toggled = computed(() => selectedPiece.value && selectedPiece.value === slot.value?.piece)
+const marked = computed(() => killableSlots.value.find(slot => slot.x === x && slot.y === y))
 
 function onClick() {
-  if (!toggleable.value || !slot.value) {
+  if (!isOwnPiece.value || !slot.value) {
     if (selectedPiece.value) {
       store.moveSelectedPiece(x, y)
     }
@@ -35,16 +36,20 @@ function onClick() {
       'slot--colored': colored,
       'slot--selectable': selectable,
       'slot--highlighted': highlighted,
-      'slot--toggled': toggled
+      'slot--toggled': toggled,
+      'slot--marked': marked
     }"
     @click="onClick()"
   >
+    <div v-if="marked" class="slot__mark">
+    </div>
     <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
 </template>
 
 <style scoped>
 .slot {
+  position: relative;
   width: 100px;
   height: 100px;
   margin: 20px;
@@ -73,11 +78,43 @@ function onClick() {
 .slot--toggled {
   border: solid 2px var(--primary-color);
 }
+</style>
 
-.slot__overlay {
-  width: 100%;
-  height: 100%;
-  border-radius: var(--small-radius);
-  background-color: var(--overlay-color);
+<style scoped lang="scss">
+@mixin border-gradient($from, $to, $weight: 0) {
+  $mix-main: mix($from, $to);
+  $mix-sub-from: mix($mix-main, $from);
+  $mix-sub-to: mix($mix-main, $to);
+
+  box-shadow: 0 1px 0 $weight rgba($mix-sub-to, .25),
+    0 -1px 0 $weight rgba($mix-sub-from, .25),
+    1px 0 0 $weight rgba($mix-sub-to, .25),
+    -1px 0 0 $weight rgba($mix-sub-from, .25),
+    1px -1px 0 $weight rgba($mix-main, .5),
+    -1px 1px 0 $weight rgba($mix-main, .5),
+    1px 1px 0 $weight rgba($to, .75),
+    -1px -1px 0 $weight rgba($from, .75);
+}
+
+.slot__mark {
+  @include border-gradient(skyblue, hotpink);
+  position: absolute;
+  border-radius: 50%;
+  width: 90%;
+  height: 90%;
+  left: 5%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+  animation: rotateThis 1s linear infinite;
+}
+
+@keyframes rotateThis {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
+  }
 }
 </style>

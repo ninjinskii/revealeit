@@ -10,7 +10,7 @@ import {
 } from "../domain/Message";
 import { WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
-import { RevealedBoardSlot } from "../domain/RevealedBoardSlot";
+import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
 
 export const useGlobalStore = defineStore("global", () => {
   const messenger = new WebSocketMessenger({
@@ -20,8 +20,10 @@ export const useGlobalStore = defineStore("global", () => {
 
   messenger.observe({
     messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
-    onMessageReceived: (message: RevealedBoardSlot[]) => {
-      revealedSlots.value = message;
+    onMessageReceived: (message: BoardUpdate) => {
+      console.log(message.killable)
+      revealedSlots.value = message.revealed;
+      killableSlots.value = message.killable;
     },
   });
 
@@ -35,6 +37,7 @@ export const useGlobalStore = defineStore("global", () => {
   });
 
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
+  const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
   const selectedPiece: Ref<BoardPiece | null> = ref(null);
@@ -74,6 +77,7 @@ export const useGlobalStore = defineStore("global", () => {
 
   return {
     revealedSlots,
+    killableSlots,
     player,
     otherPlayers,
     selectedPiece,

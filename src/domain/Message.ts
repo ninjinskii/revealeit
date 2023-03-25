@@ -1,6 +1,6 @@
 import { Constants } from "./Constants";
 import { OtherPlayer } from "./Player";
-import { RevealedBoardSlot } from "./RevealedBoardSlot";
+import { BoardUpdate, RevealedBoardSlot } from "./BoardUpdate";
 
 abstract class Message {
   constructor(public readonly key: string, protected content: string) {}
@@ -54,8 +54,8 @@ export class MoveMessage extends SendableMessage<MoveMessageOptions> {
 }
 
 export class BoardUpdateMessage
-  extends ReceiveableMessage<RevealedBoardSlot[]> {
-  getContent(): RevealedBoardSlot[] {
+  extends ReceiveableMessage<BoardUpdate> {
+  getContent(): BoardUpdate {
     return JSON.parse(this.content.replaceAll("@", ":"));
   }
 }

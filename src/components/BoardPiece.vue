@@ -5,7 +5,7 @@ import { BoardPiece } from '../domain/BoardPiece';
 import { useGlobalStore } from '../stores/store';
 
 const store = useGlobalStore()
-const { player, otherPlayers } = storeToRefs(store)
+const { player } = storeToRefs(store)
 
 const { piece } = defineProps<{ piece: BoardPiece }>()
 
@@ -20,15 +20,15 @@ const color = computed(() => piece.playerId === player.value?.id ? 'blue' : 'red
 
 <style scoped>
 .piece {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   z-index: 20;
   border-radius: 50%;
   margin: auto;
 }
 
 img {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
 }
 </style>
