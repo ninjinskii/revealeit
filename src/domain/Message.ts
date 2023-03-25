@@ -1,4 +1,5 @@
 import { Constants } from "./Constants";
+import { OtherPlayer } from "./Player";
 import { RevealedBoardSlot } from "./RevealedBoardSlot";
 
 abstract class Message {
@@ -19,6 +20,7 @@ export abstract class ReceiveableMessage<T> extends Message {
 
 interface HandshakeMessageOptions {
   playerId: string;
+  playerName: string;
 }
 
 interface MoveMessageOptions {
@@ -34,7 +36,7 @@ export class HandshakeMessage extends SendableMessage<HandshakeMessageOptions> {
   }
 
   setContent(data: HandshakeMessageOptions): HandshakeMessage {
-    super.content = data.playerId;
+    super.content = `${data.playerId},${data.playerName}`;
     return this;
   }
 }
@@ -60,5 +62,16 @@ export class BoardUpdateMessage
 export class NewTurnMessage extends ReceiveableMessage<string> {
   getContent(): string {
     return this.content;
+  }
+}
+
+export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
+  getContent(): OtherPlayer[] {
+    let index = 0;
+    console.log(this.content)
+    return this.content.split(",").map((playerString) => {
+      const [id, name] = playerString.split("|");
+      return { id, name, color: Constants.PLAYER_COLORS[index++] };
+    });
   }
 }

@@ -7,7 +7,7 @@ import {
   SendableMessage,
 } from "../domain/Message";
 import { WebSocketMessenger } from "../domain/Messenger";
-import { Player } from "../domain/Player";
+import { OtherPlayer, Player } from "../domain/Player";
 import { RevealedBoardSlot } from "../domain/RevealedBoardSlot";
 
 // const fakeBoardData = [
@@ -27,18 +27,22 @@ export const useGlobalStore = defineStore("global", () => {
   messenger.observe({
     messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
     onMessageReceived: (message: RevealedBoardSlot[]) => {
-      console.log("received board update: ");
-      console.log(message);
-      console.log("before");
-      console.log(revealedSlots.value.length);
       revealedSlots.value = message;
-      console.log("after");
-      console.log(revealedSlots.value.length);
+    },
+  });
+
+  messenger.observe({
+    messageKey: Constants.MESSAGE_PLAYERS_KEY,
+    onMessageReceived: (message: OtherPlayer[]) => {
+      otherPlayers.value = message.filter((tplayer) =>
+        tplayer.id !== player.value?.id
+      );
     },
   });
 
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const player: Ref<Player | null> = ref(null);
+  const otherPlayers: Ref<OtherPlayer[]> = ref([]);
 
   function connect() {
     player.value = new Player("Louis", messenger);
@@ -48,9 +52,8 @@ export const useGlobalStore = defineStore("global", () => {
     }
 
     const message = new HandshakeMessage()
-      .setContent({ playerId: player.value.id });
+      .setContent({ playerId: player.value.id, playerName: player.value.name });
 
-    console.log("send message");
     player.value.messenger.sendMessage(message);
   }
 

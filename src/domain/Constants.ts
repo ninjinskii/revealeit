@@ -7,4 +7,5 @@ export class Constants {
   public static MESSAGE_MOVE_KEY = "move"
   public static MESSAGE_BOARD_UPDATE_KEY = "board"
   public static MESSAGE_TURN_KEY = "turn"
+  public static MESSAGE_PLAYERS_KEY = "players"
 }

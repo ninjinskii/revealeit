@@ -8,20 +8,16 @@ export class Player {
     const playerId = localStorage.getItem(Constants.PLAYER_ID_KEY);
     this.id = playerId || crypto.randomUUID();
     localStorage.setItem(Constants.PLAYER_ID_KEY, this.id);
-    console.log("Player id")
-    console.log(this.id)
+    console.log(`Player id ${this.id}`);
   }
 
   isSelf(): boolean {
     return this.id === localStorage.getItem(Constants.PLAYER_ID_KEY);
   }
+}
 
-  // static fromDto({ id, name }: { id: string; name: string }): Player {
-  //   const player = new Player(
-  //     name,
-  //     new WebSocketMessenger(Constants?.SERVER_WEBSOCKET_URL),
-  //   );
-  //   player.id = id;
-  //   return player;
-  // }
+export interface OtherPlayer {
+  id: string;
+  name: string;
+  color: string;
 }

@@ -2,6 +2,7 @@ import { Constants } from "./Constants";
 import {
   BoardUpdateMessage,
   NewTurnMessage,
+  PlayersMessage,
   ReceiveableMessage,
   SendableMessage,
 } from "./Message";
@@ -30,6 +31,8 @@ export abstract class Messenger {
         return new BoardUpdateMessage(key, content);
       case Constants.MESSAGE_TURN_KEY:
         return new NewTurnMessage(key, content);
+      case Constants.MESSAGE_PLAYERS_KEY:
+        return new PlayersMessage(key, content);
       default:
         throw new Error(`Cannot parse message: key was ${key}`);
     }
