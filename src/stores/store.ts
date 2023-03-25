@@ -24,7 +24,7 @@ export const useGlobalStore = defineStore("global", () => {
     onWebSocketReady: connect,
   });
 
-  messenger.addOnMessageReceivedListener({
+  messenger.observe({
     messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
     onMessageReceived: (message: RevealedBoardSlot[]) => {
       console.log("received board update: ");

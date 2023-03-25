@@ -6,7 +6,7 @@ import {
   SendableMessage,
 } from "./Message";
 
-interface ReceiveableMessageListener<T> {
+interface ReceiveableMessageObserver<T> {
   messageKey: string;
   onMessageReceived(message: T): void;
 }
@@ -17,7 +17,7 @@ interface WebSocketMessengerOptions {
 }
 
 export abstract class Messenger {
-  protected onMessageReceivedListeners: ReceiveableMessageListener<any>[] = [];
+  protected observers: ReceiveableMessageObserver<any>[] = [];
   public onMessengerReady?: (messenger: Messenger) => void;
 
   abstract sendMessage(message: SendableMessage<any>): void;
@@ -35,8 +35,8 @@ export abstract class Messenger {
     }
   }
 
-  addOnMessageReceivedListener(listener: ReceiveableMessageListener<any>) {
-    this.onMessageReceivedListeners.push(listener);
+  observe(listener: ReceiveableMessageObserver<any>) {
+    this.observers.push(listener);
   }
 }
 
@@ -53,7 +53,7 @@ export class WebSocketMessenger extends Messenger {
       (event: MessageEvent<string>) => {
         const message = this.receiveMessage(event.data);
 
-        this.onMessageReceivedListeners
+        this.observers
           .find((listener) => listener.messageKey === message.key)
           ?.onMessageReceived(message.getContent());
       },
