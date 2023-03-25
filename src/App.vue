@@ -5,9 +5,13 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 const store = useGlobalStore()
-const { playingPlayer, player } = storeToRefs(store)
+const { playingPlayer, player, hasWon } = storeToRefs(store)
 
 const info = computed(() => {
+  // if (hasWon) {
+  //   return "Vous avez gagné !"
+  // }
+
   if (playingPlayer.value === "") {
     return "En attente d'autres joueurs"
   }
