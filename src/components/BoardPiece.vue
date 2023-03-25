@@ -28,6 +28,7 @@ function getPlayerColor(playerId: string) {
 
 <style scoped>
 .piece {
+  position: relative;
   width: 60px;
   height: 60px;
   z-index: 20;
@@ -36,7 +37,10 @@ function getPlayerColor(playerId: string) {
 }
 
 img {
-  width: 50px;
-  height: 50px;
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  left: 5%;
+  top: 35%;
 }
 </style>
