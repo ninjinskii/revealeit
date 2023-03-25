@@ -35,8 +35,8 @@ export abstract class Messenger {
     }
   }
 
-  observe(listener: ReceiveableMessageObserver<any>) {
-    this.observers.push(listener);
+  observe(observer: ReceiveableMessageObserver<any>) {
+    this.observers.push(observer);
   }
 }
 
@@ -54,7 +54,7 @@ export class WebSocketMessenger extends Messenger {
         const message = this.receiveMessage(event.data);
 
         this.observers
-          .find((listener) => listener.messageKey === message.key)
+          .find((observer) => observer.messageKey === message.key)
           ?.onMessageReceived(message.getContent());
       },
     );
