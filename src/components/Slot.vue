@@ -67,7 +67,6 @@ function onClick() {
 }
 
 .slot--highlighted {
-  /* filter: drop-shadow(0 0 1em var(--primary-color)); */
   box-shadow: 0px 0px 20px 0.5px var(--primary-color);
 }
 

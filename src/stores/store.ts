@@ -21,7 +21,6 @@ export const useGlobalStore = defineStore("global", () => {
   messenger.observe({
     messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
     onMessageReceived: (message: BoardUpdate) => {
-      console.log(message.killable)
       revealedSlots.value = message.revealed;
       killableSlots.value = message.killable;
     },
@@ -56,7 +55,7 @@ export const useGlobalStore = defineStore("global", () => {
   }
 
   function moveSelectedPiece(toX: number, toY: number) {
-    const slot = revealedSlots.value.find((slot) =>
+    const slot = revealedSlots.value.find(slot =>
       slot.piece === selectedPiece.value
     );
 
