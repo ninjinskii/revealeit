@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
-import { useGlobalStore } from '../stores/store';
 import Slot from './Slot.vue'
 
 const { boardSize } = defineProps<{ boardSize: number }>()
-
-const store = useGlobalStore()
-const { killableSlots } = storeToRefs(store)
-const killAvailable = computed(() => killableSlots.value.length > 0)
-
 </script>
 
 <template>
@@ -20,7 +12,6 @@ const killAvailable = computed(() => killableSlots.value.length > 0)
       </td>
     </tr>
   </table>
-  <button v-if="killAvailable" class="kill-button">Éliminer</button>
 </template>
 
 <style scoped>

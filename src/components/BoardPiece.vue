@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CONNREFUSED } from 'dns';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { BoardPiece } from '../domain/BoardPiece';

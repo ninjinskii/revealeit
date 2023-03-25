@@ -30,6 +30,12 @@ interface MoveMessageOptions {
   toY: number;
 }
 
+interface KillMessageOptions {
+  playerId: string;
+  toX: number;
+  toY: number;
+}
+
 export class HandshakeMessage extends SendableMessage<HandshakeMessageOptions> {
   constructor() {
     super(Constants.MESSAGE_HANDSHAKE_KEY, "");
@@ -49,6 +55,18 @@ export class MoveMessage extends SendableMessage<MoveMessageOptions> {
   setContent(data: MoveMessageOptions): MoveMessage {
     // Do not use Object.values here, it might mess properties order
     super.content = [data.fromX, data.fromY, data.toX, data.toY].join(",");
+    return this;
+  }
+}
+
+export class KillMessage extends SendableMessage<KillMessageOptions> {
+  constructor() {
+    super(Constants.MESSAGE_KILL_KEY, "");
+  }
+
+  setContent(data: KillMessageOptions): KillMessage {
+    // Do not use Object.values here, it might mess properties order
+    super.content = [data.playerId, data.toX, data.toY].join(",");
     return this;
   }
 }

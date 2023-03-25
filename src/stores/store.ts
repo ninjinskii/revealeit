@@ -5,6 +5,7 @@ import { Constants } from "../domain/Constants";
 import {
   BoardUpdateMessage,
   HandshakeMessage,
+  KillMessage,
   MoveMessage,
   SendableMessage,
 } from "../domain/Message";
@@ -55,7 +56,7 @@ export const useGlobalStore = defineStore("global", () => {
   }
 
   function moveSelectedPiece(toX: number, toY: number) {
-    const slot = revealedSlots.value.find(slot =>
+    const slot = revealedSlots.value.find((slot) =>
       slot.piece === selectedPiece.value
     );
 
@@ -66,10 +67,23 @@ export const useGlobalStore = defineStore("global", () => {
     const fromX = slot.x;
     const fromY = slot.y;
 
-    selectedPiece.value = null
+    selectedPiece.value = null;
 
     const message = new MoveMessage()
       .setContent({ fromX, fromY, toX, toY });
+
+    player.value?.messenger.sendMessage(message);
+  }
+
+  function killPieceAt(x: number, y: number) {
+    if (!player.value) {
+      throw new Error("Cannot kill piece: current player does not exists");
+    }
+
+    const message = new KillMessage()
+      .setContent({ playerId: player.value.id, toX: x, toY: y });
+
+      console.log(message.build())
 
     player.value?.messenger.sendMessage(message);
   }
@@ -81,5 +95,6 @@ export const useGlobalStore = defineStore("global", () => {
     otherPlayers,
     selectedPiece,
     moveSelectedPiece,
+    killPieceAt,
   };
 });

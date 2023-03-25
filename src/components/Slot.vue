@@ -27,6 +27,11 @@ function onClick() {
 
   selectedPiece.value = slot.value?.piece
 }
+
+function killPiece(clickEvent: Event) {
+  clickEvent.preventDefault()
+  store.killPieceAt(x, y)
+}
 </script>
 
 <template>
@@ -41,8 +46,8 @@ function onClick() {
     }"
     @click="onClick()"
   >
-    <div v-if="marked" class="slot__mark">
-    </div>
+    <div v-if="marked" class="slot__mark"></div>
+    <button v-if="marked" class="slot__mark__btn" @click="killPiece($event)">Tuer</button>
     <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
 </template>
@@ -76,6 +81,12 @@ function onClick() {
 
 .slot--toggled {
   border: solid 2px var(--primary-color);
+}
+
+.slot__mark__btn {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
 }
 </style>
 

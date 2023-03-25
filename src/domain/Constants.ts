@@ -5,6 +5,7 @@ export class Constants {
   public static SERVER_WEBSOCKET_URL = "ws://revealeit-backend.njk.localhost:5000/"
   public static MESSAGE_HANDSHAKE_KEY = "handshake"
   public static MESSAGE_MOVE_KEY = "move"
+  public static MESSAGE_KILL_KEY = "kill"
   public static MESSAGE_BOARD_UPDATE_KEY = "board"
   public static MESSAGE_TURN_KEY = "turn"
   public static MESSAGE_PLAYERS_KEY = "players"
