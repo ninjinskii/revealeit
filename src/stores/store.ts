@@ -57,5 +57,5 @@ export const useGlobalStore = defineStore("global", () => {
     player.value.messenger.sendMessage(message);
   }
 
-  return { revealedSlots };
+  return { revealedSlots, player, otherPlayers };
 });

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { RevealedBoardSlot } from '../domain/RevealedBoardSlot';
 import { useGlobalStore } from '../stores/store';
+import BoardPiece from './BoardPiece.vue';
 
 const store = useGlobalStore()
 const { revealedSlots } = storeToRefs(store)
@@ -20,8 +20,7 @@ const selectable = computed(() => highlighted && slot.value?.piece === null)
     class="slot"
     :class="{ 'slot--colored': colored, 'slot--selectable': selectable, 'slot--highlighted': highlighted }"
   >
-    <!-- <div v-if="!highlighted" class="slot__overlay">
-    </div> -->
+    <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
 </template>
 
