@@ -1,22 +1,16 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
+import { BoardPiece } from "../domain/BoardPiece";
 import { Constants } from "../domain/Constants";
 import {
   BoardUpdateMessage,
   HandshakeMessage,
+  MoveMessage,
   SendableMessage,
 } from "../domain/Message";
 import { WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
 import { RevealedBoardSlot } from "../domain/RevealedBoardSlot";
-
-// const fakeBoardData = [
-//   { x: 1, y: 0, piece: null },
-//   { x: 1, y: 1, piece: null },
-//   { x: 1, y: 2, piece: { name: "explorer", playerId: "1" } },
-//   { x: 1, y: 3, piece: null },
-//   { x: 1, y: 4, piece: null },
-// ];
 
 export const useGlobalStore = defineStore("global", () => {
   const messenger = new WebSocketMessenger({
@@ -43,6 +37,7 @@ export const useGlobalStore = defineStore("global", () => {
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
+  const selectedPiece: Ref<BoardPiece | null> = ref(null);
 
   function connect() {
     player.value = new Player("Louis", messenger);
@@ -57,5 +52,31 @@ export const useGlobalStore = defineStore("global", () => {
     player.value.messenger.sendMessage(message);
   }
 
-  return { revealedSlots, player, otherPlayers };
+  function moveSelectedPiece(toX: number, toY: number) {
+    const slot = revealedSlots.value.find((slot) =>
+      slot.piece === selectedPiece.value
+    );
+
+    if (!slot) {
+      throw new Error("Cannot move piece: source slot not found");
+    }
+
+    const fromX = slot.x;
+    const fromY = slot.y;
+
+    selectedPiece.value = null
+
+    const message = new MoveMessage()
+      .setContent({ fromX, fromY, toX, toY });
+
+    player.value?.messenger.sendMessage(message);
+  }
+
+  return {
+    revealedSlots,
+    player,
+    otherPlayers,
+    selectedPiece,
+    moveSelectedPiece,
+  };
 });

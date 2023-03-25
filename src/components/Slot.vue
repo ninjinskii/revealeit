@@ -5,20 +5,39 @@ import { useGlobalStore } from '../stores/store';
 import BoardPiece from './BoardPiece.vue';
 
 const store = useGlobalStore()
-const { revealedSlots } = storeToRefs(store)
+const { revealedSlots, player, selectedPiece } = storeToRefs(store)
 
 const { colored, x, y } = defineProps<{ colored: boolean, x: number, y: number }>()
 
 const slot = computed(() => revealedSlots.value.find(slot => slot.x === x && slot.y === y) || null)
 const highlighted = computed(() => slot.value !== null)
-const selectable = computed(() => highlighted && slot.value?.piece === null)
+const selectable = computed(() => highlighted && slot.value?.piece === null && selectedPiece.value)
+const toggleable = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
+const toggled = computed(() => selectedPiece.value && selectedPiece.value === slot.value?.piece)
 
+function onClick() {
+  if (!toggleable.value || !slot.value) {
+    if (selectedPiece.value) {
+      store.moveSelectedPiece(x, y)
+    }
+
+    return
+  }
+
+  selectedPiece.value = slot.value?.piece
+}
 </script>
 
 <template>
   <div 
     class="slot"
-    :class="{ 'slot--colored': colored, 'slot--selectable': selectable, 'slot--highlighted': highlighted }"
+    :class="{
+      'slot--colored': colored,
+      'slot--selectable': selectable,
+      'slot--highlighted': highlighted,
+      'slot--toggled': toggled
+    }"
+    @click="onClick()"
   >
     <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
@@ -33,6 +52,7 @@ const selectable = computed(() => highlighted && slot.value?.piece === null)
   border-radius: var(--small-radius);
   z-index: 1;
   transition: all 0.2s ease-out;
+  box-sizing: border-box;
 }
 
 .slot--selectable:hover {
@@ -48,6 +68,10 @@ const selectable = computed(() => highlighted && slot.value?.piece === null)
 
 .slot--colored {
   background-color: var(--colored-slot-color);
+}
+
+.slot--toggled {
+  border: solid 2px var(--primary-color);
 }
 
 .slot__overlay {

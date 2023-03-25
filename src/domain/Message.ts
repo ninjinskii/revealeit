@@ -47,7 +47,8 @@ export class MoveMessage extends SendableMessage<MoveMessageOptions> {
   }
 
   setContent(data: MoveMessageOptions): MoveMessage {
-    super.content = Object.values(data).join(",");
+    // Do not use Object.values here, it might mess properties order
+    super.content = [data.fromX, data.fromY, data.toX, data.toY].join(",");
     return this;
   }
 }
@@ -68,7 +69,7 @@ export class NewTurnMessage extends ReceiveableMessage<string> {
 export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
   getContent(): OtherPlayer[] {
     let index = 0;
-    console.log(this.content)
+    console.log(this.content);
     return this.content.split(",").map((playerString) => {
       const [id, name] = playerString.split("|");
       return { id, name, color: Constants.PLAYER_COLORS[index++] };

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { RevealedBoardSlot } from '../domain/RevealedBoardSlot';
-import { useGlobalStore } from '../stores/store'
 import Slot from './Slot.vue'
 
 const { boardSize } = defineProps<{ boardSize: number }>()
@@ -16,6 +13,7 @@ const { boardSize } = defineProps<{ boardSize: number }>()
       </td>
     </tr>
   </table>
+  <button class="kill-button">Éliminer</button>
 </template>
 
 <style scoped>
