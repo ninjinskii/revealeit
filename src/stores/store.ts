@@ -29,17 +29,25 @@ export const useGlobalStore = defineStore("global", () => {
 
   messenger.observe({
     messageKey: Constants.MESSAGE_PLAYERS_KEY,
-    onMessageReceived: (message: OtherPlayer[]) => {
+    onMessageReceived(message: OtherPlayer[]) {
       otherPlayers.value = message.filter((tplayer) =>
         tplayer.id !== player.value?.id
       );
     },
   });
 
+  messenger.observe({
+    messageKey: Constants.MESSAGE_TURN_KEY,
+    onMessageReceived(message: string) {
+      playingPlayer.value = message
+    }
+  })
+
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
+  const playingPlayer: Ref<string> = ref("")
   const selectedPiece: Ref<BoardPiece | null> = ref(null);
 
   function connect() {
@@ -92,6 +100,7 @@ export const useGlobalStore = defineStore("global", () => {
     revealedSlots,
     killableSlots,
     player,
+    playingPlayer,
     otherPlayers,
     selectedPiece,
     moveSelectedPiece,

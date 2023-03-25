@@ -10,13 +10,11 @@ const { player, otherPlayers } = storeToRefs(store)
 
 const { piece } = defineProps<{ piece: BoardPiece }>()
 
-const color = computed(() => piece.playerId === player.value?.id ? 'blue' : getPlayerColor(piece.playerId))
-
-function getPlayerColor(playerId: string) {
-  const ids = otherPlayers.value.map(player => player.id)
-  const index = ids.indexOf(playerId)
-  return Constants.PLAYER_COLORS[index]
-}
+const color = computed(() =>
+  piece.playerId === player.value?.id
+    ? 'blue'
+    : Constants.PLAYER_COLORS[otherPlayers.value.map(player => player.id).indexOf(piece.playerId)]
+)
 </script>
 
 <template>

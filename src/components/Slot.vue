@@ -5,16 +5,17 @@ import { useGlobalStore } from '../stores/store';
 import BoardPiece from './BoardPiece.vue';
 
 const store = useGlobalStore()
-const { revealedSlots, killableSlots, player, selectedPiece } = storeToRefs(store)
+const { revealedSlots, killableSlots, player, selectedPiece, playingPlayer } = storeToRefs(store)
 
 const { colored, x, y } = defineProps<{ colored: boolean, x: number, y: number }>()
 
+const isPlayerTurn = computed(() => playingPlayer.value === player.value?.id)
 const slot = computed(() => revealedSlots.value.find(slot => slot.x === x && slot.y === y) || null)
 const highlighted = computed(() => slot.value !== null)
-const selectable = computed(() => highlighted && slot.value?.piece === null && selectedPiece.value)
+const selectable = computed(() => highlighted && slot.value?.piece === null && selectedPiece.value && isPlayerTurn)
 const isOwnPiece = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
 const toggled = computed(() => selectedPiece.value && selectedPiece.value === slot.value?.piece)
-const marked = computed(() => killableSlots.value.find(slot => slot.x === x && slot.y === y))
+const marked = computed(() => killableSlots.value.find(slot => slot.x === x && slot.y === y) && isPlayerTurn)
 
 function onClick() {
   if (!isOwnPiece.value || !slot.value) {
@@ -22,6 +23,10 @@ function onClick() {
       store.moveSelectedPiece(x, y)
     }
 
+    return
+  }
+
+  if (!isPlayerTurn.value) {
     return
   }
 
@@ -42,12 +47,11 @@ function killPiece(clickEvent: Event) {
       'slot--selectable': selectable,
       'slot--highlighted': highlighted,
       'slot--toggled': toggled,
-      'slot--marked': marked
     }"
     @click="onClick()"
   >
-    <div v-if="marked" class="slot__mark"></div>
-    <button v-if="marked" class="slot__mark__btn" @click="killPiece($event)">Tuer</button>
+    <div v-if="marked && isPlayerTurn" class="slot__mark"></div>
+    <button v-if="marked && isPlayerTurn" class="slot__mark__btn" @click="killPiece($event)">Tuer</button>
     <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
 </template>
