@@ -12,6 +12,8 @@ services:
     networks:
       - default
       - proxy
+    environment:
+      - VITE_SERVER_WEBSOCKET_URL=ws://revealeit-backend.njk.localhost:5000/
     volumes:
       - .:/app
     ports:

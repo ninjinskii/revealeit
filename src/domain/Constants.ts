@@ -9,7 +9,7 @@ export class Constants {
   public static PLAYER_ID_KEY = "revealeit.player.id";
   public static PLAYER_NAME_KEY = "revealeit.player.name";
   public static BOARD_SIZE = 5;
-  public static SERVER_WEBSOCKET_URL = "wss://revealeit-backend.deno.dev"
+  public static SERVER_WEBSOCKET_URL = import.meta.env.VITE_SERVER_WEBSOCKET_URL
   public static MESSAGE_HANDSHAKE_KEY = "handshake";
   public static MESSAGE_MOVE_KEY = "move";
   public static MESSAGE_KILL_KEY = "kill";
