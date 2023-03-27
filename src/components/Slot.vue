@@ -51,7 +51,13 @@ function killPiece(clickEvent: Event) {
     @click="onClick()"
   >
     <div v-if="marked && isPlayerTurn" class="slot__mark"></div>
-    <button v-if="marked && isPlayerTurn" class="slot__mark__btn" @click="killPiece($event)">Tuer</button>
+    <button 
+      v-if="marked && isPlayerTurn" 
+      class="slot__mark__btn" 
+      @click="killPiece($event)"
+    >
+      {{ $t("piece__action_kill") }}
+    </button>
     <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
   </div>
 </template>

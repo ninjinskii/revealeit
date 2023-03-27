@@ -7,7 +7,9 @@ export class Player {
   constructor(public name: string, public messenger: Messenger) {
     const playerId = localStorage.getItem(Constants.PLAYER_ID_KEY);
     this.id = playerId || crypto.randomUUID();
+
     localStorage.setItem(Constants.PLAYER_ID_KEY, this.id);
+    localStorage.setItem(Constants.PLAYER_NAME_KEY, this.name);
     console.log(`Player id ${this.id}`);
   }
 

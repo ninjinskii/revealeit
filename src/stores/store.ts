@@ -9,51 +9,65 @@ import {
   MoveMessage,
   SendableMessage,
 } from "../domain/Message";
-import { WebSocketMessenger } from "../domain/Messenger";
+import { Messenger, WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
 import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
 
 export const useGlobalStore = defineStore("global", () => {
-  const messenger = new WebSocketMessenger({
-    serverWebSocketUrl: Constants.SERVER_WEBSOCKET_URL,
-    onWebSocketReady: connect,
-  });
-
-  messenger.observe({
-    messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
-    onMessageReceived: (message: BoardUpdate) => {
-      revealedSlots.value = message.revealed;
-      killableSlots.value = message.killable;
-    },
-  });
-
-  messenger.observe({
-    messageKey: Constants.MESSAGE_PLAYERS_KEY,
-    onMessageReceived(message: OtherPlayer[]) {
-      otherPlayers.value = message.filter((tplayer) =>
-        tplayer.id !== player.value?.id
-      );
-    },
-  });
-
-  messenger.observe({
-    messageKey: Constants.MESSAGE_TURN_KEY,
-    onMessageReceived(message: string) {
-      playingPlayer.value = message;
-    },
-  });
-
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
   const playingPlayer: Ref<string> = ref("");
   const selectedPiece: Ref<BoardPiece | null> = ref(null);
-  const hasWon = ref(false);
+  const hasWon = ref(otherPlayers.value.length === 1);
+  const isServerReady = ref(false);
+
+  function initPlayerMessenger(): Messenger {
+    const messenger = new WebSocketMessenger({
+      serverWebSocketUrl: Constants.SERVER_WEBSOCKET_URL,
+      onWebSocketReady: onMessengerReady,
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_BOARD_UPDATE_KEY,
+      onMessageReceived: (message: BoardUpdate) => {
+        revealedSlots.value = message.revealed;
+        killableSlots.value = message.killable;
+      },
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_PLAYERS_KEY,
+      onMessageReceived(message: OtherPlayer[]) {
+        otherPlayers.value = message.filter((tplayer) =>
+          tplayer.id !== player.value?.id
+        );
+      },
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_TURN_KEY,
+      onMessageReceived(message: string) {
+        playingPlayer.value = message;
+      },
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_ERROR_KEY,
+      onMessageReceived(message: string) {
+        console.log(message);
+      },
+    });
+
+    return messenger;
+  }
+
+  function onMessengerReady() {
+    isServerReady.value = true;
+  }
 
   function connect() {
-    player.value = new Player("Louis", messenger);
-
     if (!player.value) {
       throw new Error("Cannot connect to server: no Player instantiated");
     }
@@ -107,5 +121,8 @@ export const useGlobalStore = defineStore("global", () => {
     moveSelectedPiece,
     killPieceAt,
     hasWon,
+    isServerReady,
+    connect,
+    notifyServer: initPlayerMessenger,
   };
 });

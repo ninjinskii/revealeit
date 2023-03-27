@@ -7,7 +7,8 @@ export class Constants {
     "#FFFF00",
   ];
   public static PLAYER_ID_KEY = "revealeit.player.id";
-  public static PLAYER_ID_NAME = "revealeit.player.name";
+  public static PLAYER_NAME_KEY = "revealeit.player.name";
+  public static BOARD_SIZE = 5;
   public static SERVER_WEBSOCKET_URL = "wss://revealeit-backend.deno.dev"
   public static MESSAGE_HANDSHAKE_KEY = "handshake";
   public static MESSAGE_MOVE_KEY = "move";
@@ -15,4 +16,5 @@ export class Constants {
   public static MESSAGE_BOARD_UPDATE_KEY = "board";
   public static MESSAGE_TURN_KEY = "turn";
   public static MESSAGE_PLAYERS_KEY = "players";
+  public static MESSAGE_ERROR_KEY = "error";
 }
