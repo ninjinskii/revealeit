@@ -10,7 +10,6 @@ const { t } = useI18n();
   <h2>{{ t("rules__title") }}</h2>
   <p>{{ t("rules__body") }}</p>
   <ul>
-    <li>{{ t("rules__reveal") }}</li>
     <li>{{ t("rules__use_pieces") }}</li>
     <li>{{ t("rules__how_to_win") }}</li>
     <li>{{ t("rules__move_pieces") }}</li>
@@ -46,9 +45,5 @@ h1, h2 {
 
 .container > * {
   margin: 8px;
-}
-
-li:first-child {
-  font-weight: 900;
 }
 </style>

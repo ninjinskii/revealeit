@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import { KillableRange } from '../domain/KillableRange';
 import { useGlobalStore } from '../stores/store';
 import BoardPiece from './BoardPiece.vue';
 
 const store = useGlobalStore()
-const { revealedSlots, killableSlots, player, selectedPiece, playingPlayer } = storeToRefs(store)
+const {
+  revealedSlots,
+  killableSlots,
+  player,
+  selectedPiece,
+  playingPlayer,
+} = storeToRefs(store)
 
 const { colored, x, y } = defineProps<{ colored: boolean, x: number, y: number }>()
 
@@ -16,6 +23,26 @@ const selectable = computed(() => highlighted && slot.value?.piece === null && s
 const isOwnPiece = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
 const toggled = computed(() => selectedPiece.value && selectedPiece.value === slot.value?.piece)
 const marked = computed(() => killableSlots.value.find(slot => slot.x === x && slot.y === y) && isPlayerTurn)
+const left = computed(() => {
+  const slot = revealedSlots.value.find(slot => slot.piece !== null && slot.piece.killRange > 0 && slot.piece.playerId === player.value?.id)
+
+  if (slot && slot.x === x) {
+    return Math.abs(y - slot.y) === slot.piece!.killRange
+  }
+
+  if (slot && slot.y === y) {
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+    return Math.abs(x - slot.x) === slot.piece!.killRange
+  }
+
+  return false
+})
+
+function coerceIn(options: { target: number, min: number, max: number }) {
+  const coercedUp = Math.min(options.max, options.target)
+  const coerced = Math.max(options.min, coercedUp)
+  return coerced
+}
 
 function onClick() {
   if (!isOwnPiece.value || !slot.value) {
@@ -47,6 +74,7 @@ function killPiece(clickEvent: Event) {
       'slot--selectable': selectable,
       'slot--highlighted': highlighted,
       'slot--toggled': toggled,
+      'slot--killable-range': left,
     }"
     @click="onClick()"
   >
@@ -91,6 +119,10 @@ function killPiece(clickEvent: Event) {
 
 .slot--toggled {
   border: solid 2px var(--primary-color);
+}
+
+.slot--killable-range {
+  background-color: red;
 }
 
 .slot__mark__btn {

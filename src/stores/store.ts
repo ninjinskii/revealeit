@@ -16,14 +16,15 @@ import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
 export const useGlobalStore = defineStore("global", () => {
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
+
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
   const playingPlayer: Ref<string> = ref("");
   const selectedPiece: Ref<BoardPiece | null> = ref(null);
-  const hasWon = ref(otherPlayers.value.length === 1);
+  const hasWon = ref(otherPlayers.value.length === 0);
   const isServerReady = ref(false);
 
-  function initPlayerMessenger(): Messenger {
+  function notifyServer(): Messenger {
     const messenger = new WebSocketMessenger({
       serverWebSocketUrl: Constants.SERVER_WEBSOCKET_URL,
       onWebSocketReady: onMessengerReady,
@@ -40,6 +41,8 @@ export const useGlobalStore = defineStore("global", () => {
     messenger.observe({
       messageKey: Constants.MESSAGE_PLAYERS_KEY,
       onMessageReceived(message: OtherPlayer[]) {
+        console.log("message");
+        console.log(message);
         otherPlayers.value = message.filter((tplayer) =>
           tplayer.id !== player.value?.id
         );
@@ -115,14 +118,14 @@ export const useGlobalStore = defineStore("global", () => {
     revealedSlots,
     killableSlots,
     player,
-    playingPlayer,
     otherPlayers,
+    playingPlayer,
     selectedPiece,
-    moveSelectedPiece,
-    killPieceAt,
     hasWon,
     isServerReady,
+    notifyServer,
     connect,
-    notifyServer: initPlayerMessenger,
+    moveSelectedPiece,
+    killPieceAt,
   };
 });

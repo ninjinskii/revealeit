@@ -3,15 +3,14 @@ export default {
   rules__title: "Règles",
   rules__body:
     `Revealeit est un jeu de plateau de traque des pièces de votre adversaire.`,
-  rules__reveal: "Vous ne voyez PAS les pièces de votre adversaire par défaut",
   rules__use_pieces:
-    "Utilisez vos pièces pour révéler et éliminer les pièces adverses",
+    "Déplacez vos pièces pour révéler les pièces adverses",
   rules__how_to_win: "Éliminez toutes les pièces adverses pour gagner",
-  rules__move_pieces: "Bougez vos pièces à chaque tour",
+  rules__move_pieces: "Déplacez chacune de vos pièces à chaque tour",
   rules__explorer:
-    "Révèle les cases de sur sa ligne/colonne sur toute la longueur du plateau.",
+    "Révèle les cases sur sa ligne/colonne sur toute la longueur du plateau.",
   rules__assassin:
-    "Révèle les cases adjacentes à lui même. Peut éliminer une pièce révélée adverse sur sa ligne/colonne à une distance de 3 cases.",
+    "Révèle les cases adjacentes à lui même. Peut éliminer une pièce adverse révélée sur sa ligne/colonne à une distance de 3 cases.",
   piece__details: "Vous disposez des pièces suivantes:",
   piece__explorer: "Explorateur",
   piece__assassin: "Assassin",

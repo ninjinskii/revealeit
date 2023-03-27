@@ -88,8 +88,8 @@ export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
   getContent(): OtherPlayer[] {
     let index = 0;
     console.log(this.content);
-    return this.content.split(",").map((playerString) => {
-      const [id, name] = playerString.split("|");
+    return this.content.split("|").map((playerString) => {
+      const [id, name] = playerString.split(",");
       return { id, name, color: Constants.PLAYER_COLORS[index++] };
     });
   }

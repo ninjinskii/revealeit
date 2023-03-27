@@ -12,28 +12,33 @@ import Modal from './components/Modal.vue';
 const { t } = useI18n();
 
 const store = useGlobalStore()
-const { playingPlayer, player, hasWon, isServerReady } = storeToRefs(store)
+const { playingPlayer, player, otherPlayers, isServerReady } = storeToRefs(store)
 
 const name = ref(localStorage.getItem(Constants.PLAYER_NAME_KEY) || "")
 const showRules = ref(false)
 
 const isPlayerTurn = computed(() => playingPlayer.value === player.value?.id)
 const waitingForPlayers = computed(() => playingPlayer.value === "")
+const hasWon = computed(() => otherPlayers.value.length === 0)
 const info = computed(() => {
   if (!isServerReady.value) {
     return t("info__waiting_for_server")
   }
 
-  if (hasWon.value) {
-    return t("info__you_win")
-  }
-
-  if (waitingForPlayers) {
+  if (playingPlayer.value === "") {
     return t("info__waiting_for_player")
   }
 
-  if (playingPlayer.value !== player.value?.id) {
-    return t("info__waiting_for_turn", { playerName: playingPlayer.value })
+  if (player.value && playingPlayer.value !== player.value.id) {
+    const otherPlayer = otherPlayers.value.find(
+      player => player.id === playingPlayer.value
+    )
+
+    return t("info__waiting_for_turn", { playerName: otherPlayer?.name })
+  }
+
+  if (hasWon.value) {
+    return t("info__you_win")
   }
 
   if (isPlayerTurn) {
@@ -67,8 +72,8 @@ watch(isServerReady, (isReady) => {
     <div v-if="player" class="container">
       <p 
         :class="{
-          'anim__eye_catcher': isPlayerTurn,
-          'anim__loader': !isServerReady || waitingForPlayers
+          'anim__eye_catcher': isPlayerTurn && !hasWon,
+          'anim__loader': !isServerReady || waitingForPlayers,
         }"
       >
         {{ info }}
@@ -160,4 +165,5 @@ button {
   100% {
     transform: scale(1, 1) translateY(0);
   }
-}</style>
+}
+</style>
