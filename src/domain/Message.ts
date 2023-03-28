@@ -84,6 +84,11 @@ export class NewTurnMessage extends ReceiveableMessage<string> {
   }
 }
 
+export class LostMessage extends ReceiveableMessage<void> {
+  getContent() {
+  }
+}
+
 export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
   getContent(): OtherPlayer[] {
     let index = 0;

@@ -17,5 +17,7 @@ export class Constants {
   public static readonly MESSAGE_BOARD_UPDATE_KEY = "board";
   public static readonly MESSAGE_TURN_KEY = "turn";
   public static readonly MESSAGE_PLAYERS_KEY = "players";
+  public static readonly MESSAGE_LOST_KEY = "lost";
   public static readonly MESSAGE_ERROR_KEY = "error";
+  public static readonly WEBSOCKET_CODE_END_GAME = 4000;
 }

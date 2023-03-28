@@ -1,6 +1,7 @@
 import { Constants } from "./Constants";
 import {
   BoardUpdateMessage,
+  LostMessage,
   NewTurnMessage,
   PlayersMessage,
   ReceiveableMessage,
@@ -23,6 +24,8 @@ export abstract class Messenger {
 
   abstract sendMessage(message: SendableMessage<any>): void;
 
+  abstract endCommunication(): void;
+
   receiveMessage(rawMessage: string): ReceiveableMessage<any> {
     const [key, content] = rawMessage.split(":");
 
@@ -33,8 +36,10 @@ export abstract class Messenger {
         return new NewTurnMessage(key, content);
       case Constants.MESSAGE_PLAYERS_KEY:
         return new PlayersMessage(key, content);
+      case Constants.MESSAGE_LOST_KEY:
+        return new LostMessage(key, content);
       default:
-        throw new Error(`Cannot parse message: key was ${key}`);
+        throw new Error(`Cannot parse message: key was '${key}'`);
     }
   }
 
@@ -55,6 +60,7 @@ export class WebSocketMessenger extends Messenger {
       "message",
       (event: MessageEvent<string>) => {
         const message = this.receiveMessage(event.data);
+        console.log(message.getContent())
 
         this.observers
           .find((observer) => observer.messageKey === message.key)
@@ -69,9 +75,17 @@ export class WebSocketMessenger extends Messenger {
     this.websocket.addEventListener("error", () => {
       console.log("socker error")
     });
+
+    this.websocket.addEventListener("close", () => {
+      // localStorage.removeItem(Constants.PLAYER_ID_KEY)
+    });
   }
 
   sendMessage(message: SendableMessage<any>): void {
     this.websocket.send(message.build());
+  }
+
+  endCommunication(): void {
+      this.websocket.close(Constants.WEBSOCKET_CODE_END_GAME)
   }
 }

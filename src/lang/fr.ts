@@ -22,5 +22,6 @@ export default {
   info__waiting_for_player: "En attente d'autres joueurs",
   info__waiting_for_turn: "Au tour de {playerName}",
   info__your_turn: "A vous de jouer",
-  info__you_win: "Vous avez gagné !",
+  info__you_win: "Vous avez gagné ! Actualisez la page pour rejouer.",
+  info__you_loose: "Vous avez perdu. Actualisez la page pour rejouer.",
 };

@@ -12,7 +12,7 @@ import Modal from './components/Modal.vue';
 const { t } = useI18n();
 
 const store = useGlobalStore()
-const { playingPlayer, player, otherPlayers, isServerReady } = storeToRefs(store)
+const { playingPlayer, player, otherPlayers, isServerReady, hasLost } = storeToRefs(store)
 
 const name = ref(localStorage.getItem(Constants.PLAYER_NAME_KEY) || "")
 const showRules = ref(false)
@@ -23,6 +23,10 @@ const hasWon = computed(() => otherPlayers.value.length === 0)
 const info = computed(() => {
   if (!isServerReady.value) {
     return t("info__waiting_for_server")
+  }
+
+  if (hasLost.value) {
+    return t("info__you_loose")
   }
 
   if (playingPlayer.value === "") {
@@ -72,7 +76,7 @@ watch(isServerReady, (isReady) => {
     <div v-if="player" class="container">
       <p 
         :class="{
-          'anim__eye_catcher': isPlayerTurn && !hasWon,
+          'anim__eye_catcher': isPlayerTurn && !hasWon && !hasLost,
           'anim__loader': !isServerReady || waitingForPlayers,
         }"
       >

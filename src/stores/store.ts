@@ -20,6 +20,7 @@ export const useGlobalStore = defineStore("global", () => {
   const playingPlayer: Ref<string> = ref("");
   const selectedPiece: Ref<BoardPiece | null> = ref(null);
   const hasWon = ref(otherPlayers.value.length === 0);
+  const hasLost = ref(false);
   const isServerReady = ref(false);
 
   function notifyServer(): Messenger {
@@ -43,9 +44,16 @@ export const useGlobalStore = defineStore("global", () => {
     messenger.observe({
       messageKey: Constants.MESSAGE_PLAYERS_KEY,
       onMessageReceived(message: OtherPlayer[]) {
-        otherPlayers.value = message.filter((tplayer) =>
+        const _otherPlayers = message.filter((tplayer) =>
           tplayer.id !== player.value?.id
         );
+        otherPlayers.value = _otherPlayers;
+
+        const gameEnded = _otherPlayers.length === 0;
+
+        if (gameEnded) {
+          messenger.endCommunication();
+        }
       },
     });
 
@@ -53,6 +61,13 @@ export const useGlobalStore = defineStore("global", () => {
       messageKey: Constants.MESSAGE_TURN_KEY,
       onMessageReceived(message: string) {
         playingPlayer.value = message;
+      },
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_LOST_KEY,
+      onMessageReceived() {
+        hasLost.value = true;
       },
     });
 
@@ -121,6 +136,7 @@ export const useGlobalStore = defineStore("global", () => {
     playingPlayer,
     selectedPiece,
     hasWon,
+    hasLost,
     isServerReady,
     notifyServer,
     connect,
