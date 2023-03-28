@@ -1,8 +1,9 @@
 :root {
   --background-color: #242424;
   --slot-color: #242424;
-  --colored-slot-color: #7A7A7A;
+  --colored-slot-color: #323232;
   --primary-color: #42B883AA;
+  --secondary-color: skyblue;
   --overlay-color: black; /*#80000000*/
   --small-radius: 6px;
 

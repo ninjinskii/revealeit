@@ -2,20 +2,18 @@ import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 import { BoardPiece } from "../domain/BoardPiece";
 import { Constants } from "../domain/Constants";
-import {
-  BoardUpdateMessage,
-  HandshakeMessage,
-  KillMessage,
-  MoveMessage,
-  SendableMessage,
-} from "../domain/Message";
+import { HandshakeMessage, KillMessage, MoveMessage } from "../domain/Message";
 import { Messenger, WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
 import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
+import { OrthogonalKillableRange } from "../domain/KillableRange";
 
 export const useGlobalStore = defineStore("global", () => {
+  const killableRange = new OrthogonalKillableRange();
+
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
+  const killableRangeSlots: Ref<{ x: number; y: number }[]> = ref([]);
 
   const player: Ref<Player | null> = ref(null);
   const otherPlayers: Ref<OtherPlayer[]> = ref([]);
@@ -35,14 +33,16 @@ export const useGlobalStore = defineStore("global", () => {
       onMessageReceived: (message: BoardUpdate) => {
         revealedSlots.value = message.revealed;
         killableSlots.value = message.killable;
+        killableRangeSlots.value = killableRange.getRangeLimitSlotsForPlayer(
+          message.revealed,
+          player.value!,
+        );
       },
     });
 
     messenger.observe({
       messageKey: Constants.MESSAGE_PLAYERS_KEY,
       onMessageReceived(message: OtherPlayer[]) {
-        console.log("message");
-        console.log(message);
         otherPlayers.value = message.filter((tplayer) =>
           tplayer.id !== player.value?.id
         );
@@ -109,14 +109,13 @@ export const useGlobalStore = defineStore("global", () => {
     const message = new KillMessage()
       .setContent({ playerId: player.value.id, toX: x, toY: y });
 
-    console.log(message.build());
-
     player.value?.messenger.sendMessage(message);
   }
 
   return {
     revealedSlots,
     killableSlots,
+    killableRangeSlots,
     player,
     otherPlayers,
     playingPlayer,

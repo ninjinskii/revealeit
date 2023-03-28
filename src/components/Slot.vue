@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { KillableRange } from '../domain/KillableRange';
 import { useGlobalStore } from '../stores/store';
 import BoardPiece from './BoardPiece.vue';
 
@@ -9,6 +8,7 @@ const store = useGlobalStore()
 const {
   revealedSlots,
   killableSlots,
+  killableRangeSlots,
   player,
   selectedPiece,
   playingPlayer,
@@ -23,26 +23,9 @@ const selectable = computed(() => highlighted && slot.value?.piece === null && s
 const isOwnPiece = computed(() => slot.value?.piece !== null && slot.value?.piece.playerId === player.value?.id)
 const toggled = computed(() => selectedPiece.value && selectedPiece.value === slot.value?.piece)
 const marked = computed(() => killableSlots.value.find(slot => slot.x === x && slot.y === y) && isPlayerTurn)
-const left = computed(() => {
-  const slot = revealedSlots.value.find(slot => slot.piece !== null && slot.piece.killRange > 0 && slot.piece.playerId === player.value?.id)
-
-  if (slot && slot.x === x) {
-    return Math.abs(y - slot.y) === slot.piece!.killRange
-  }
-
-  if (slot && slot.y === y) {
-    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-    return Math.abs(x - slot.x) === slot.piece!.killRange
-  }
-
-  return false
+const isKillableRange = computed(() => {
+  return killableRangeSlots.value.find(slot => slot.x === x && slot.y === y) || false
 })
-
-function coerceIn(options: { target: number, min: number, max: number }) {
-  const coercedUp = Math.min(options.max, options.target)
-  const coerced = Math.max(options.min, coercedUp)
-  return coerced
-}
 
 function onClick() {
   if (!isOwnPiece.value || !slot.value) {
@@ -74,7 +57,7 @@ function killPiece(clickEvent: Event) {
       'slot--selectable': selectable,
       'slot--highlighted': highlighted,
       'slot--toggled': toggled,
-      'slot--killable-range': left,
+      'slot--killable-range': isKillableRange,
     }"
     @click="onClick()"
   >
@@ -118,11 +101,11 @@ function killPiece(clickEvent: Event) {
 }
 
 .slot--toggled {
-  border: solid 2px var(--primary-color);
+  border: solid 2px var(--primary-color) !important;
 }
 
 .slot--killable-range {
-  background-color: red;
+  border: dashed var(--secondary-color) 1px;
 }
 
 .slot__mark__btn {
@@ -149,24 +132,24 @@ function killPiece(clickEvent: Event) {
 }
 
 .slot__mark {
-  @include border-gradient(skyblue, hotpink);
   position: absolute;
   border-radius: 50%;
   width: 90%;
   height: 90%;
-  left: 5%;
-  top: 5%;
+  left: 4%;
+  top: 4%;
   transform: translate(-50%, -50%);
-  animation: rotateThis 1s linear infinite;
+  animation: rotateThis 4s linear infinite;
+  border: dashed var(--secondary-color) 1px;
 }
 
 @keyframes rotateThis {
   from {
-    transform: rotate(0deg) scale(1);
+    transform: rotate(0deg);
   }
-
+  
   to {
-    transform: rotate(360deg) scale(1);
+    transform: rotate(360deg);
   }
 }
 </style>
