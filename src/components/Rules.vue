@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import RulePiece from './RulePiece.vue';
+import translations from '../lang/fr.js'
 
 const { t } = useI18n();
+
 </script>
 
 <template>
@@ -10,22 +12,16 @@ const { t } = useI18n();
   <h2>{{ t("rules__title") }}</h2>
   <p>{{ t("rules__body") }}</p>
   <ul>
-    <li>{{ t("rules__use_pieces") }}</li>
-    <li>{{ t("rules__how_to_win") }}</li>
-    <li>{{ t("rules__move_pieces") }}</li>
+    <li v-for="rule in Object.keys(translations.rules__list)">{{ t(`rules__list.${rule}`) }}</li>
   </ul>
   <p>{{ t("piece__details") }}</p>
   <div class="container">
-    <RulePiece 
-      pieceId="explorer"
-      :pieceName="t('piece__explorer')" 
-      :pieceDescription="t('rules__explorer')"
-    />
-    <RulePiece 
-      pieceId="shooter"
-      :pieceName="t('piece__assassin')" 
-      :pieceDescription="t('rules__assassin')"
-    />
+    <RulePiece
+      v-for="piece of Object.keys(translations.rules_pieces__list)"
+      :pieceId="t(`rules_pieces__list.${piece}.id`)"
+      :pieceName="t(`rules_pieces__list.${piece}.name`)"
+      :pieceDescription="t(`rules_pieces__list.${piece}.description`)"
+     />
   </div>
 </template>
 
