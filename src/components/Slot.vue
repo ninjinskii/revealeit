@@ -63,13 +63,13 @@ function killPiece(clickEvent: Event) {
   >
     <div v-if="marked && isPlayerTurn" class="slot__mark"></div>
     <button 
-      v-if="marked && isPlayerTurn" 
-      class="slot__mark__btn" 
+      v-if="marked && isPlayerTurn"
+      class="slot__mark__btn"
       @click="killPiece($event)"
     >
       {{ $t("piece__action_kill") }}
     </button>
-    <BoardPiece v-if="slot?.piece" :piece="slot.piece"></BoardPiece>
+    <BoardPiece v-if="slot?.piece" :piece="slot.piece" />
   </div>
 </template>
 
@@ -110,25 +110,9 @@ function killPiece(clickEvent: Event) {
 
 .slot__mark__btn {
   position: absolute;
+  z-index: 20;
   right: 5px;
   bottom: 5px;
-}
-</style>
-
-<style scoped lang="scss">
-@mixin border-gradient($from, $to, $weight: 0) {
-  $mix-main: mix($from, $to);
-  $mix-sub-from: mix($mix-main, $from);
-  $mix-sub-to: mix($mix-main, $to);
-
-  box-shadow: 0 1px 0 $weight rgba($mix-sub-to, .25),
-    0 -1px 0 $weight rgba($mix-sub-from, .25),
-    1px 0 0 $weight rgba($mix-sub-to, .25),
-    -1px 0 0 $weight rgba($mix-sub-from, .25),
-    1px -1px 0 $weight rgba($mix-main, .5),
-    -1px 1px 0 $weight rgba($mix-main, .5),
-    1px 1px 0 $weight rgba($to, .75),
-    -1px -1px 0 $weight rgba($from, .75);
 }
 
 .slot__mark {
@@ -139,11 +123,11 @@ function killPiece(clickEvent: Event) {
   left: 4%;
   top: 4%;
   transform: translate(-50%, -50%);
-  animation: rotateThis 4s linear infinite;
+  animation: rotate 4s linear infinite;
   border: dashed var(--secondary-color) 1px;
 }
 
-@keyframes rotateThis {
+@keyframes rotate {
   from {
     transform: rotate(0deg);
   }
