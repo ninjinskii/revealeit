@@ -1,18 +1,21 @@
-# Vue 3 + TypeScript + Vite
+# Revealeit
+<p>
+  <img src="/src/assets/readme.png" alt="Cavity screenshots">
+</p>
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This project is a client for an online board game where you have to hunt your opponent pieces.
 
-## Recommended IDE Setup
+## Release process
+Netlify automatically deploy this project whenever master branch receive updates.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Run the project on your machine
+Make sure [traefik](https://github.com/ninjinskii/traefik) is running.
+Clone and setup the [revealeit-backend](https://github.com/ninjinskii/revealeit-backend):
 
-## Type Support For `.vue` Imports in TS
+```bash
+cd revealeit
+docker-compose run --rm web yarn install
+docker compose up -d
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+You can now access the project at https://revealeit.njk.localhost.
