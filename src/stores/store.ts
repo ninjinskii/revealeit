@@ -11,6 +11,8 @@ import { OrthogonalKillableRange } from "../domain/KillableRange";
 export const useGlobalStore = defineStore("global", () => {
   const killableRange = new OrthogonalKillableRange();
 
+  const alertMessage = ref("");
+
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableRangeSlots: Ref<{ x: number; y: number }[]> = ref([]);
@@ -74,7 +76,7 @@ export const useGlobalStore = defineStore("global", () => {
     messenger.observe({
       messageKey: Constants.MESSAGE_ERROR_KEY,
       onMessageReceived(message: string) {
-        console.log(message);
+        alert(message)
       },
     });
 
@@ -127,7 +129,13 @@ export const useGlobalStore = defineStore("global", () => {
     player.value?.messenger.sendMessage(message);
   }
 
+  function alert(messsage: string) {
+    alertMessage.value = messsage
+    setTimeout(() => alertMessage.value = "", Constants.ALERT_TIMEOUT_MILLIS)
+  }
+
   return {
+    alertMessage,
     revealedSlots,
     killableSlots,
     killableRangeSlots,
@@ -142,5 +150,6 @@ export const useGlobalStore = defineStore("global", () => {
     connect,
     moveSelectedPiece,
     killPieceAt,
+    alert,
   };
 });

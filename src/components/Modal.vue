@@ -3,11 +3,13 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
+const { open } = defineProps<{ open: boolean }>()
+
 defineEmits(['close'])
 </script>
 
 <template>
-  <div class="modal">
+  <div v-if="open" class="modal">
     <div class="end">
       <button @click="$emit('close')">{{ t("close") }}</button>
     </div>

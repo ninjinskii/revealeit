@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n';
 import { Player } from './domain/Player';
 import { Constants } from './domain/Constants';
 import Modal from './components/Modal.vue';
+import Alert from './components/Alert.vue';
 
 const { t } = useI18n();
 
@@ -51,9 +52,25 @@ const info = computed(() => {
 })
 
 function createPlayer() {
+  if (!validateName(name.value)) {
+    store.alert(t("enter_name__error"))
+    return
+  }
+
   const messenger = store.notifyServer()
   player.value = new Player(name.value, messenger)
 }
+
+function validateName(name: string): boolean {
+  if (name.length === 0 || name.length > 16) {
+    return false
+  }
+
+  const charDigitsOnly = /[^A-Z0-9]/i
+  return !name.match(charDigitsOnly)
+}
+
+
 
 if (name.value !== "") {
   createPlayer()
@@ -69,9 +86,12 @@ watch(isServerReady, (isReady) => {
 <template>
   <div>
     <Transition>
-      <Modal v-if="showRules" @close="showRules = false">
+      <Modal :open="showRules" @close="showRules = false">
         <Rules />
       </Modal>
+    </Transition>
+    <Transition>
+      <Alert />
     </Transition>
     <div v-if="player" class="container">
       <p 

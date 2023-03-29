@@ -20,4 +20,5 @@ export class Constants {
   public static readonly MESSAGE_LOST_KEY = "lost";
   public static readonly MESSAGE_ERROR_KEY = "error";
   public static readonly WEBSOCKET_CODE_END_GAME = 4000;
+  public static readonly ALERT_TIMEOUT_MILLIS = 5000;
 }
