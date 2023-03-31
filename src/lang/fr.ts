@@ -34,4 +34,8 @@ export default {
   info__your_turn: "A vous de jouer",
   info__you_win: "Vous avez gagné ! Actualisez la page pour rejouer.",
   info__you_loose: "Vous avez perdu. Actualisez la page pour rejouer.",
+  error__base: "Une erreur est survenue.",
+  error__waiting_for_kill: "Un pion est à votre portée, éliminez-le pour achever le tour.",
+  error__piece_already_moved: "Vous avez déjà déplacé cette pièce dans ce tour.",
+  error__move_range_outreached: "Vous ne pouvez pas déplacer cette pièce aussi loin.",
 };
