@@ -9,6 +9,8 @@ import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
 import { OrthogonalKillableRange } from "../domain/KillableRange";
 
 export const useGlobalStore = defineStore("global", () => {
+  let alertTimeout = -1;
+
   const killableRange = new OrthogonalKillableRange();
 
   const alertMessage = ref("");
@@ -76,7 +78,7 @@ export const useGlobalStore = defineStore("global", () => {
     messenger.observe({
       messageKey: Constants.MESSAGE_ERROR_KEY,
       onMessageReceived(message: string) {
-        alert(message)
+        alert(message);
       },
     });
 
@@ -130,8 +132,16 @@ export const useGlobalStore = defineStore("global", () => {
   }
 
   function alert(messsage: string) {
-    alertMessage.value = messsage
-    setTimeout(() => alertMessage.value = "", Constants.ALERT_TIMEOUT_MILLIS)
+    if (alertTimeout) {
+      clearTimeout(alertTimeout);
+      alertTimeout = -1;
+    }
+
+    alertMessage.value = messsage;
+    alertTimeout = setTimeout(
+      () => alertMessage.value = "",
+      Constants.ALERT_TIMEOUT_MILLIS,
+    );
   }
 
   return {
