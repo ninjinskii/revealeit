@@ -8,7 +8,6 @@ export class Constants {
   ];
   public static readonly PLAYER_ID_KEY = "revealeit.player.id";
   public static readonly PLAYER_NAME_KEY = "revealeit.player.name";
-  public static readonly BOARD_SIZE = 5;
   public static readonly SERVER_WEBSOCKET_URL =
     import.meta.env.VITE_SERVER_WEBSOCKET_URL;
   public static readonly MESSAGE_HANDSHAKE_KEY = "handshake";
@@ -18,6 +17,7 @@ export class Constants {
   public static readonly MESSAGE_TURN_KEY = "turn";
   public static readonly MESSAGE_PLAYERS_KEY = "players";
   public static readonly MESSAGE_LOST_KEY = "lost";
+  public static readonly MESSAGE_CONFIGURATION_KEY = "configuration";
   public static readonly MESSAGE_ERROR_KEY = "error";
   public static readonly WEBSOCKET_CODE_END_GAME = 4000;
   public static readonly ALERT_TIMEOUT_MILLIS = 5000;

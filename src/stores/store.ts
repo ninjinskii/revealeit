@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import { defineStore, mapWritableState } from "pinia";
 import { Ref, ref } from "vue";
 import { BoardPiece } from "../domain/BoardPiece";
 import { Constants } from "../domain/Constants";
@@ -17,6 +17,7 @@ export const useGlobalStore = defineStore("global", () => {
   const killableRange = new OrthogonalKillableRange();
 
   const alertMessage = ref("");
+  const boardSize = ref(0);
 
   const revealedSlots: Ref<RevealedBoardSlot[]> = ref([]);
   const killableSlots: Ref<RevealedBoardSlot[]> = ref([]);
@@ -42,6 +43,7 @@ export const useGlobalStore = defineStore("global", () => {
         revealedSlots.value = message.revealed;
         killableSlots.value = message.killable;
         killableRangeSlots.value = killableRange.getRangeLimitSlotsForPlayer(
+          boardSize.value,
           message.revealed,
           player.value!,
         );
@@ -75,6 +77,13 @@ export const useGlobalStore = defineStore("global", () => {
       messageKey: Constants.MESSAGE_LOST_KEY,
       onMessageReceived() {
         hasLost.value = true;
+      },
+    });
+
+    messenger.observe({
+      messageKey: Constants.MESSAGE_CONFIGURATION_KEY,
+      onMessageReceived(message: number) {
+        boardSize.value = message;
       },
     });
 
@@ -148,6 +157,7 @@ export const useGlobalStore = defineStore("global", () => {
   }
 
   return {
+    boardSize,
     alertMessage,
     revealedSlots,
     killableSlots,

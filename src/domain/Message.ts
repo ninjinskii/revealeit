@@ -1,6 +1,6 @@
 import { Constants } from "./Constants";
 import { OtherPlayer } from "./Player";
-import { BoardUpdate, RevealedBoardSlot } from "./BoardUpdate";
+import { BoardUpdate } from "./BoardUpdate";
 
 abstract class Message {
   constructor(public readonly key: string, protected content: string) {}
@@ -96,6 +96,12 @@ export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
       const [id, name] = playerString.split(",");
       return { id, name, color: Constants.PLAYER_COLORS[index++] };
     });
+  }
+}
+
+export class ConfigurationMessage extends ReceiveableMessage<number> {
+  getContent(): number {
+    return parseInt(this.content)
   }
 }
 

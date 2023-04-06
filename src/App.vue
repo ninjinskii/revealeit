@@ -13,7 +13,7 @@ import Alert from './components/Alert.vue';
 const { t } = useI18n();
 
 const store = useGlobalStore()
-const { playingPlayer, player, otherPlayers, isServerReady, hasLost } = storeToRefs(store)
+const { playingPlayer, player, otherPlayers, isServerReady, hasLost, boardSize } = storeToRefs(store)
 
 const vFocus = {
   mounted: (el: HTMLElement) => el.focus()
@@ -104,7 +104,7 @@ watch(isServerReady, (isReady) => {
       >
         {{ info }}
       </p>
-      <Board :board-size="Constants.BOARD_SIZE" />
+      <Board :board-size="boardSize" />
       <button 
         id="opener" 
         class="button__rule" 

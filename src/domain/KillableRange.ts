@@ -1,5 +1,4 @@
 import { RevealedBoardSlot } from "./BoardUpdate";
-import { Constants } from "./Constants";
 import { Player } from "./Player";
 
 export enum Direction {
@@ -10,6 +9,7 @@ export enum Direction {
 
 export abstract class KillableRange {
   abstract getRangeLimitSlotsForPlayer(
+    boardSize: number,
     slots: RevealedBoardSlot[],
     player: Player,
   ): { x: number; y: number }[];
@@ -30,6 +30,7 @@ export abstract class KillableRange {
 
 export class OrthogonalKillableRange extends KillableRange {
   getRangeLimitSlotsForPlayer(
+    boardSize: number,
     slots: RevealedBoardSlot[],
     player: Player,
   ): { x: number; y: number }[] {
@@ -39,7 +40,7 @@ export class OrthogonalKillableRange extends KillableRange {
     for (const killer of killers) {
       const { x, y } = killer;
       const range = killer.piece!.killRange;
-      const bounds = { min: 0, max: Constants.BOARD_SIZE - 1 };
+      const bounds = { min: 0, max: boardSize - 1 };
 
       result.push(...[
         {

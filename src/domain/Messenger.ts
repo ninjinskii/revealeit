@@ -1,6 +1,7 @@
 import { Constants } from "./Constants";
 import {
   BoardUpdateMessage,
+  ConfigurationMessage,
   ErrorMessage,
   LostMessage,
   NewTurnMessage,
@@ -39,6 +40,8 @@ export abstract class Messenger {
         return new PlayersMessage(key, content);
       case Constants.MESSAGE_LOST_KEY:
         return new LostMessage(key, content);
+      case Constants.MESSAGE_CONFIGURATION_KEY:
+        return new ConfigurationMessage(key, content);
       case Constants.MESSAGE_ERROR_KEY:
         return new ErrorMessage(key, content);
       default:
@@ -57,7 +60,7 @@ export class WebSocketMessenger extends Messenger {
   constructor(options: WebSocketMessengerOptions) {
     super();
     this.websocket = new WebSocket(options.serverWebSocketUrl);
-    super.onMessengerReady = options.onWebSocketReady
+    super.onMessengerReady = options.onWebSocketReady;
 
     this.websocket.addEventListener(
       "message",
@@ -75,7 +78,7 @@ export class WebSocketMessenger extends Messenger {
     });
 
     this.websocket.addEventListener("error", () => {
-      console.log("socker error")
+      console.log("socker error");
     });
 
     this.websocket.addEventListener("close", () => {
@@ -88,6 +91,6 @@ export class WebSocketMessenger extends Messenger {
   }
 
   endCommunication(): void {
-      this.websocket.close(Constants.WEBSOCKET_CODE_END_GAME)
+    this.websocket.close(Constants.WEBSOCKET_CODE_END_GAME);
   }
 }
