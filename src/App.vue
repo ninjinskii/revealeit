@@ -70,8 +70,6 @@ function validateName(name: string): boolean {
   return !name.match(charDigitsOnly)
 }
 
-
-
 if (name.value !== "") {
   createPlayer()
 }
@@ -103,7 +101,7 @@ watch(isServerReady, (isReady) => {
         {{ info }}
       </p>
       <Board :board-size="Constants.BOARD_SIZE" />
-      <button class="button__rule" @click="showRules = true">{{ t("rules__title") }}</button>
+      <button id="opener" class="button__rule" @click="showRules = true">{{ t("rules__title") }}</button>
     </div>
     <div v-else>
       <Rules />

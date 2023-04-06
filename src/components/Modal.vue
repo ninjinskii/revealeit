@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
+import { ref } from 'vue';
+import useDetectOutsideClick from '../directives/useDetectClickOutside';
 
 const { open } = defineProps<{ open: boolean }>()
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
+
+const modal = ref(null)
+
+useDetectOutsideClick(modal, "opener", () => {
+  emit("close")
+})
 </script>
 
 <template>
-  <div v-if="open" class="modal">
-    <div class="end">
-      <button @click="$emit('close')">{{ t("close") }}</button>
-    </div>
+  <div v-if="open" ref="modal" class="modal">
     <slot></slot>
   </div>
 </template>
@@ -31,9 +33,5 @@ defineEmits(['close'])
   border-radius: 16px;
   overflow-y: scroll;
   z-index: 999;
-}
-
-.end {
-  text-align: end;
 }
 </style>
