@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from '../stores/store';
-
-const { t } = useI18n();
 
 const store = useGlobalStore()
 const { alertMessage } = storeToRefs(store)
-
-const { open } = defineProps<{ open: boolean }>()
 </script>
 
 <template>

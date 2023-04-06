@@ -1,6 +1,7 @@
 import { Constants } from "./Constants";
 import {
   BoardUpdateMessage,
+  ErrorMessage,
   LostMessage,
   NewTurnMessage,
   PlayersMessage,
@@ -38,6 +39,8 @@ export abstract class Messenger {
         return new PlayersMessage(key, content);
       case Constants.MESSAGE_LOST_KEY:
         return new LostMessage(key, content);
+      case Constants.MESSAGE_ERROR_KEY:
+        return new ErrorMessage(key, content);
       default:
         throw new Error(`Cannot parse message: key was '${key}'`);
     }
@@ -49,7 +52,7 @@ export abstract class Messenger {
 }
 
 export class WebSocketMessenger extends Messenger {
-  websocket: WebSocket;
+  private websocket: WebSocket;
 
   constructor(options: WebSocketMessengerOptions) {
     super();
@@ -60,7 +63,6 @@ export class WebSocketMessenger extends Messenger {
       "message",
       (event: MessageEvent<string>) => {
         const message = this.receiveMessage(event.data);
-        console.log(message.getContent())
 
         this.observers
           .find((observer) => observer.messageKey === message.key)

@@ -15,6 +15,10 @@ const { t } = useI18n();
 const store = useGlobalStore()
 const { playingPlayer, player, otherPlayers, isServerReady, hasLost } = storeToRefs(store)
 
+const vFocus = {
+  mounted: (el: HTMLElement) => el.focus()
+}
+
 const name = ref(localStorage.getItem(Constants.PLAYER_NAME_KEY) || "")
 const showRules = ref(false)
 
@@ -53,7 +57,7 @@ const info = computed(() => {
 
 function createPlayer() {
   if (!validateName(name.value)) {
-    store.alert(t("enter_name__error"))
+    store.alert("enter_name__error")
     return
   }
 
@@ -69,8 +73,6 @@ function validateName(name: string): boolean {
   const charDigitsOnly = /[^A-Z0-9]/i
   return !name.match(charDigitsOnly)
 }
-
-
 
 if (name.value !== "") {
   createPlayer()
@@ -103,11 +105,22 @@ watch(isServerReady, (isReady) => {
         {{ info }}
       </p>
       <Board :board-size="Constants.BOARD_SIZE" />
-      <button class="button__rule" @click="showRules = true">{{ t("rules__title") }}</button>
+      <button 
+        id="opener" 
+        class="button__rule" 
+        @click="showRules = true"
+      >
+        {{ t("rules__title") }}
+      </button>
     </div>
     <div v-else>
       <Rules />
-      <input v-model="name" :placeholder="t('enter_name')" @keyup.enter="createPlayer()">
+      <input 
+        v-focus
+        v-model="name"
+        :placeholder="t('enter_name')"
+        @keyup.enter="createPlayer()"
+      >
       <button :disabled="name.length === 0" @click="createPlayer()">{{ t("go") }}</button>
     </div>
   </div>

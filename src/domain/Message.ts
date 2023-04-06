@@ -98,3 +98,9 @@ export class PlayersMessage extends ReceiveableMessage<OtherPlayer[]> {
     });
   }
 }
+
+export class ErrorMessage extends ReceiveableMessage<string> {
+  getContent(): string {
+    return this.content
+  }
+}
