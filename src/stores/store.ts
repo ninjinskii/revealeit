@@ -7,8 +7,11 @@ import { Messenger, WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
 import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
 import { OrthogonalKillableRange } from "../domain/KillableRange";
+import { useI18n } from "vue-i18n";
 
 export const useGlobalStore = defineStore("global", () => {
+  const { t } = useI18n();
+
   let alertTimeout = -1;
 
   const killableRange = new OrthogonalKillableRange();
@@ -131,13 +134,13 @@ export const useGlobalStore = defineStore("global", () => {
     player.value?.messenger.sendMessage(message);
   }
 
-  function alert(messsage: string) {
+  function alert(messsageKey: string) {
     if (alertTimeout) {
       clearTimeout(alertTimeout);
       alertTimeout = -1;
     }
 
-    alertMessage.value = messsage;
+    alertMessage.value = t(messsageKey);
     alertTimeout = setTimeout(
       () => alertMessage.value = "",
       Constants.ALERT_TIMEOUT_MILLIS,
