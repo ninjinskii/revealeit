@@ -1,6 +1,6 @@
 # Revealeit
 <p>
-  <img src="/src/assets/readme.png" alt="Cavity screenshots">
+  <img src="/src/assets/readme.png" alt="Revealeit screenshots" width="400">
 </p>
 
 This project is a client for an online board game where you have to hunt your opponent pieces.
