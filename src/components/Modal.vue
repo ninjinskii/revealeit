@@ -4,7 +4,7 @@ import useDetectOutsideClick from '../composables/useDetectClickOutside';
 
 const { open } = defineProps<{ open: boolean }>()
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(["close"])
 
 const modal = ref(null)
 
