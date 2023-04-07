@@ -6,7 +6,10 @@ import { HandshakeMessage, KillMessage, MoveMessage } from "../domain/Message";
 import { Messenger, WebSocketMessenger } from "../domain/Messenger";
 import { OtherPlayer, Player } from "../domain/Player";
 import { BoardUpdate, RevealedBoardSlot } from "../domain/BoardUpdate";
-import { OrthogonalKillableRange } from "../domain/KillableRange";
+import {
+  DiagonalKillableRange,
+  OrthogonalKillableRange,
+} from "../domain/KillableRange";
 import { useI18n } from "vue-i18n";
 
 export const useGlobalStore = defineStore("global", () => {
@@ -14,7 +17,8 @@ export const useGlobalStore = defineStore("global", () => {
 
   let alertTimeout = -1;
 
-  const killableRange = new OrthogonalKillableRange();
+  const orthogonalKillableRange = new OrthogonalKillableRange();
+  const diagonalKillableRange = new DiagonalKillableRange();
 
   const alertMessage = ref("");
   const boardSize = ref(0);
@@ -42,11 +46,12 @@ export const useGlobalStore = defineStore("global", () => {
       onMessageReceived: (message: BoardUpdate) => {
         revealedSlots.value = message.revealed;
         killableSlots.value = message.killable;
-        killableRangeSlots.value = killableRange.getRangeLimitSlotsForPlayer(
-          boardSize.value,
-          message.revealed,
-          player.value!,
-        );
+        killableRangeSlots.value = orthogonalKillableRange
+          .getRangeLimitSlotsForPlayer(
+            boardSize.value,
+            message.revealed,
+            player.value!,
+          );
       },
     });
 

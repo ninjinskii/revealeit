@@ -2,9 +2,18 @@ import { RevealedBoardSlot } from "./BoardUpdate";
 import { Player } from "./Player";
 
 export enum Direction {
-  ORTHOGONAL,
-  DIAGONAL,
-  ALL,
+  ORTHOGONAL = "orthogonal",
+  DIAGONAL = "diagonal",
+  ALL = "all",
+}
+
+interface GetDiagonalSlotOptions {
+  x: number;
+  y: number;
+  killRange: number;
+  coefficientX: number;
+  coefficientY: number;
+  boardSize: number;
 }
 
 export abstract class KillableRange {
@@ -63,5 +72,100 @@ export class OrthogonalKillableRange extends KillableRange {
     }
 
     return result;
+  }
+}
+
+export class DiagonalKillableRange extends KillableRange {
+  getRangeLimitSlotsForPlayer(
+    boardSize: number,
+    slots: RevealedBoardSlot[],
+    player: Player,
+  ): { x: number; y: number }[] {
+    const killers = super.getPlayerKillers(slots, player);
+    const result: { x: number; y: number }[] = [];
+
+    for (const killer of killers) {
+      const { x, y } = killer;
+      const killRange = killer.piece!.killRange;
+
+      const slots = [
+        this.getDiagonalSlot({
+          x,
+          y,
+          killRange,
+          coefficientX: 1,
+          coefficientY: 1,
+          boardSize,
+        }),
+        this.getDiagonalSlot({
+          x,
+          y,
+          killRange,
+          coefficientX: 1,
+          coefficientY: -1,
+          boardSize,
+        }),
+        this.getDiagonalSlot({
+          x,
+          y,
+          killRange,
+          coefficientX: -1,
+          coefficientY: 1,
+          boardSize,
+        }),
+        this.getDiagonalSlot({
+          x,
+          y,
+          killRange,
+          coefficientX: -1,
+          coefficientY: -1,
+          boardSize,
+        }),
+      ].filter((it) => it !== null) as RevealedBoardSlot[];
+
+      result.push(...slots);
+    }
+
+    console.log("results:");
+    console.log(result);
+    return result;
+  }
+
+  getDiagonalSlot(
+    options: GetDiagonalSlotOptions,
+    initialX = options.x,
+    initialY = options.y,
+  ): { x: number; y: number } | null {
+    const { x, y, boardSize, killRange, coefficientX, coefficientY } = options;
+    const min = 0;
+    const max = boardSize - 1;
+
+    const slotX = x + (killRange * coefficientX);
+    const slotY = y + (killRange * coefficientY);
+    const isSelf = slotX === initialX && slotY === initialY;
+
+    if (isSelf) {
+      return null;
+    }
+
+    const isOutOfBoard = slotX > max || slotX < min || slotY > max ||
+      slotY < min;
+
+    if (isOutOfBoard) {
+      return this.getDiagonalSlot(
+        {
+          x: x - (1 * coefficientX),
+          y: y - (1 * coefficientY),
+          killRange,
+          coefficientX,
+          coefficientY,
+          boardSize,
+        },
+        initialX,
+        initialY,
+      );
+    }
+
+    return { x: slotX, y: slotY };
   }
 }
