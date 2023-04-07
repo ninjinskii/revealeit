@@ -29,10 +29,10 @@ const isKillableRange = computed(() => {
 
 const slotClass = computed(() => ({
   'slot--colored': colored,
-  'slot--selectable': selectable,
-  'slot--highlighted': highlighted,
-  'slot--toggled': toggled,
-  'slot--killable-range': isKillableRange,
+  'slot--selectable': selectable.value,
+  'slot--highlighted': highlighted.value,
+  'slot--toggled': toggled.value,
+  'slot--killable-range': isKillableRange.value,
 }))
 
 function onSlotClick() {

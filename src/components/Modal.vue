@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import useDetectOutsideClick from '../directives/useDetectClickOutside';
+import useDetectOutsideClick from '../composables/useDetectClickOutside';
 
 const { open } = defineProps<{ open: boolean }>()
 

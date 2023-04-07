@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useGlobalStore } from '../stores/store';
 import Slot from './Slot.vue'
 
-const { boardSize } = defineProps<{ boardSize: number }>()
+const store = useGlobalStore()
+const { boardSize } = storeToRefs(store)
 </script>
 
 <template>
@@ -18,7 +21,6 @@ const { boardSize } = defineProps<{ boardSize: number }>()
 table {
   border-collapse: separate;
   padding: 0;
-  margin: 0;
 }
 
 tr {
