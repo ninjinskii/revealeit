@@ -55,6 +55,11 @@ const info = computed(() => {
   }
 })
 
+const infoClass = computed(() => ({
+  'anim__eye_catcher': isPlayerTurn.value && !hasWon.value && !hasLost.value,
+  'anim__loader': !isServerReady.value || waitingForPlayers.value,
+}))
+
 function createPlayer() {
   if (!validateName(name.value)) {
     store.alert("enter_name__error")
@@ -96,20 +101,11 @@ watch(isServerReady, (isReady) => {
       <Alert />
     </Transition>
     <div v-if="player" class="container">
-      <p 
-        :class="{
-          'anim__eye_catcher': isPlayerTurn && !hasWon && !hasLost,
-          'anim__loader': !isServerReady || waitingForPlayers,
-        }"
-      >
+      <p :class="infoClass">
         {{ info }}
       </p>
       <Board />
-      <button 
-        id="opener" 
-        class="button__rule" 
-        @click="showRules = true"
-      >
+      <button id="opener" class="button__rule" @click="showRules = true">
         {{ t("rules__title") }}
       </button>
     </div>
