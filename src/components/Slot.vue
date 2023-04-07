@@ -27,7 +27,15 @@ const isKillableRange = computed(() => {
   return killableRangeSlots.value.find(slot => slot.x === x && slot.y === y) || false
 })
 
-function onClick() {
+const slotClass = computed(() => ({
+  'slot--colored': colored,
+  'slot--selectable': selectable,
+  'slot--highlighted': highlighted,
+  'slot--toggled': toggled,
+  'slot--killable-range': isKillableRange,
+}))
+
+function onSlotClick() {
   if (!isOwnPiece.value || !slot.value) {
     if (selectedPiece.value) {
       store.moveSelectedPiece(x, y)
@@ -50,17 +58,7 @@ function killPiece(clickEvent: Event) {
 </script>
 
 <template>
-  <div 
-    class="slot"
-    :class="{
-      'slot--colored': colored,
-      'slot--selectable': selectable,
-      'slot--highlighted': highlighted,
-      'slot--toggled': toggled,
-      'slot--killable-range': isKillableRange,
-    }"
-    @click="onClick()"
-  >
+  <div class="slot" :class="slotClass" @click="onSlotClick()">
     <div v-if="marked && isPlayerTurn" class="slot__mark"></div>
     <button 
       v-if="marked && isPlayerTurn"
@@ -131,7 +129,7 @@ function killPiece(clickEvent: Event) {
   from {
     transform: rotate(0deg);
   }
-  
+
   to {
     transform: rotate(360deg);
   }

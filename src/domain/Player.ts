@@ -11,10 +11,6 @@ export class Player {
     localStorage.setItem(Constants.PLAYER_ID_KEY, this.id);
     localStorage.setItem(Constants.PLAYER_NAME_KEY, this.name);
   }
-
-  isSelf(): boolean {
-    return this.id === localStorage.getItem(Constants.PLAYER_ID_KEY);
-  }
 }
 
 export interface OtherPlayer {
