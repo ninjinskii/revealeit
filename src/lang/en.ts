@@ -7,7 +7,7 @@ export default {
   rules__how_to_win: "Éliminez toutes les pièces adverses pour gagner",
   rules__move_pieces: "Bouger vos pièces à chaque tour",
   rules__explorer: "Révèle les cases de sur sa ligne/colonne sur toute la longueur du plateau.",
-  rules__assassin: "Révèle les cases adjacentes à lui même. Peut éliminer une pièce révélée adverse sur sa ligne/colonne à une distance de 3 cases.",
+  rules__assassin: "Révèle les cases adjacentes à lui même. Peut éliminer une pièce révélée adverse sur sa ligne/colonne à une distance de 1 case.",
   piece__explorer: "Explorateur",
   piece__assassin: "Assassin",
   piece__action_kill: "Tuer",
@@ -18,4 +18,5 @@ export default {
   info__waiting_for_turn: "Au tour de {playerName}",
   info__your_turn: "A vous de jouer", 
   info__your_win: "Vous avez gagné !", 
+  try__alone: "If you want to test alone, use a normal tab and a private navigation tab.",
 }

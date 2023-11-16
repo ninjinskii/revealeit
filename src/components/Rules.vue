@@ -10,6 +10,7 @@ const { t } = useI18n();
 <template>
   <h1>{{ t("app_name") }}</h1>
   <h2>{{ t("rules__title") }}</h2>
+  <div class="highlight">{{ t("try__alone") }}</div>
   <p>{{ t("rules__body") }}</p>
   <ul>
     <li v-for="rule in Object.keys(translations.rules__list)">{{ t(`rules__list.${rule}`) }}</li>
@@ -26,12 +27,14 @@ const { t } = useI18n();
 </template>
 
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   text-align: center;
   padding: 0;
   margin-top: 0;
   margin-bottom: 12px;
 }
+
 .container {
   text-align: center;
   display: flex;
@@ -39,7 +42,15 @@ h1, h2 {
   max-width: 700px;
 }
 
-.container > * {
+.highlight {
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #42B88333;
+  font-size: 20px;
+  max-width: 700px;
+}
+
+.container>* {
   margin: 8px;
 }
 </style>

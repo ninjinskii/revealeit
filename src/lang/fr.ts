@@ -19,7 +19,7 @@ export default {
     assassin: {
       id: "shooter",
       name: "Assassin",
-      description: "Révèle les cases adjacentes à lui même. Peut éliminer une pièce adverse révélée sur sa ligne/colonne à une distance de 2 cases."
+      description: "Révèle les cases adjacentes à lui même. Peut éliminer une pièce adverse révélée sur sa ligne/colonne à une distance de 1 case."
     },
   },
   piece__details: "Vous disposez des pièces suivantes:",
@@ -38,4 +38,5 @@ export default {
   error__waiting_for_kill: "Un pion est à votre portée, éliminez-le pour achever le tour.",
   error__piece_already_moved: "Vous avez déjà déplacé cette pièce dans ce tour.",
   error__move_range_outreached: "Vous ne pouvez pas déplacer cette pièce aussi loin.",
+  try__alone: "Si vous voulez tester seul, gardez un onglet classique puis ouvrez la même url avec un onglet de navigation privée.",
 };

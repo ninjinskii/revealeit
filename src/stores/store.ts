@@ -144,7 +144,7 @@ export const useGlobalStore = defineStore("global", () => {
     player.value?.messenger.sendMessage(message);
   }
 
-  function alert(messsageKey: string) {
+  function alert(messsageKey: string, timeout = Constants.ALERT_TIMEOUT_MILLIS) {
     if (alertTimeout) {
       clearTimeout(alertTimeout);
       alertTimeout = -1;
@@ -153,7 +153,7 @@ export const useGlobalStore = defineStore("global", () => {
     alertMessage.value = t(messsageKey);
     alertTimeout = setTimeout(
       () => alertMessage.value = "",
-      Constants.ALERT_TIMEOUT_MILLIS,
+      timeout
     );
   }
 
